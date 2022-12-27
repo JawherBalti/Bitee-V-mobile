@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import { ImageBackground } from "react-native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Provider } from "react-redux";
+import Content from "./components/Content";
+import Stream from "./components/Stream";
+import { store } from "./store";
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+const myTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "transparent",
+  },
+};
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer theme={myTheme}>
+      <Provider store={store}>
+        <ImageBackground
+          style={{ flexGrow: 1 }}
+          source={require("./assets/bg.jpg")}
+          resizeMode="cover"
+        >
+          <LinearGradient
+            style={{ flexGrow: 1 }}
+            colors={["#000000e6", "#00000080", "#000000e6"]}
+          >
+            <Stack.Navigator>
+              <Stack.Screen name="Content" component={Content} />
+              <Stack.Screen name="Stream" component={Stream} />
+            </Stack.Navigator>
+          </LinearGradient>
+        </ImageBackground>
+      </Provider>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
