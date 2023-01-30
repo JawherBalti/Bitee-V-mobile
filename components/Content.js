@@ -16,6 +16,8 @@ function Content() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [streams, setStreams] = useState([]);
+  const [streamUrls, setStreamUrls] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [searchedChannels, setSearchedChannels] = useState([]);
   const [filterededChannels, setFilteredChannels] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -75,13 +77,24 @@ function Content() {
     setLoading(true);
     setError(false);
     dispatch(getSearchedChannel(""));
+
     axios
-      .get("https://iptv-org.github.io/iptv/channels.json")
+      .get("https://iptv-org.github.io/api/streams.json")
+      .then((res) => setStreamUrls(res.data))
+      .catch((err) => console.log(err));
+
+    axios
+      .get("https://iptv-org.github.io/api/countries.json      ")
+      .then((res) => setCountries(res.data))
+      .catch((err) => console.log(err));
+
+    axios
+      .get("https://iptv-org.github.io/api/channels.json")
       .then((res) => {
         setLoading(false);
         setStreams(
           res.data.filter((stream) =>
-            stream.categories.some((cat) => cat.name !== "XXX")
+            stream.categories.some((cat) => cat !== "xxx")
           )
         );
         if (category !== "") dispatch(getSearchedChannel(""));
@@ -90,28 +103,28 @@ function Content() {
         } else {
           setFilteredChannels(
             res.data.filter((stream) =>
-              stream.categories.some((cat) => cat.name === category)
+              stream.categories.some((cat) => cat === category.toLowerCase())
             )
           );
         }
 
         setItemsList(
           res.data.filter((stream) =>
-            stream.categories.some((cat) => cat.name !== "XXX")
+            stream.categories.some((cat) => cat !== "xxx")
           ).length
         );
 
         if (category === "" || category === "All") {
           setItemsList(
             res.data.filter((stream) =>
-              stream.categories.some((cat) => cat.name !== "XXX")
+              stream.categories.some((cat) => cat !== "xxx")
             ).length
           );
         } else if (category === "Favorites") setItemsList(favorites.length);
         else
           setItemsList(
             res.data.filter((stream) =>
-              stream.categories.some((cat) => cat.name === category)
+              stream.categories.some((cat) => cat === category.toLowerCase())
             ).length
           );
       })
@@ -194,7 +207,12 @@ function Content() {
                     {category === "" || category === "All" ? (
                       <>
                         {streams.slice(firstOrder, lastOrder).map((stream) => (
-                          <Channels key={stream.url} streamInfo={stream} />
+                          <Channels
+                            key={stream.id}
+                            streamInfo={stream}
+                            streamUrl={streamUrls}
+                            countries={countries}
+                          />
                         ))}
                       </>
                     ) : category === "Favorites" ? (
@@ -202,7 +220,12 @@ function Content() {
                         {filterededChannels
                           .slice(firstOrder, lastOrder)
                           .map((stream) => (
-                            <Channels key={stream.url} streamInfo={stream} />
+                            <Channels
+                              key={stream.id}
+                              streamInfo={stream}
+                              streamUrl={streamUrls}
+                              countries={countries}
+                            />
                           ))}
                       </View>
                     ) : (
@@ -214,11 +237,16 @@ function Content() {
                             (stream) =>
                               stream.categories.length &&
                               stream.categories.some(
-                                (cat) => cat.name === category
+                                (cat) => cat === category.toLowerCase()
                               )
                           )
                           .map((stream) => (
-                            <Channels key={stream.url} streamInfo={stream} />
+                            <Channels
+                              key={stream.id}
+                              streamInfo={stream}
+                              streamUrl={streamUrls}
+                              countries={countries}
+                            />
                           ))}
                       </View>
                     )}
@@ -235,7 +263,12 @@ function Content() {
                         );
                       })
                       .map((stream) => (
-                        <Channels key={stream.url} streamInfo={stream} />
+                        <Channels
+                          key={stream.id}
+                          streamInfo={stream}
+                          streamUrl={streamUrls}
+                          countries={countries}
+                        />
                       ))}
                   </View>
                 )}

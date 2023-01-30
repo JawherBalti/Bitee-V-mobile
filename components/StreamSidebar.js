@@ -184,32 +184,30 @@ const StreamSidebar = () => {
                 padding: 10,
               }}
             >
-              Languages:
+              Country:
             </Text>
-            {streamInfo.languages?.map((language) => (
-              <Text
-                key={language.name}
-                style={{
-                  color: "#fff",
-                  padding: 10,
-                  fontSize: 11,
-                  marginLeft: 10,
-                }}
-              >
-                {language.name}
-              </Text>
-            ))}
+            <Text
+              style={{
+                color: "#fff",
+                padding: 10,
+                fontSize: 11,
+                marginLeft: 10,
+              }}
+            >
+              {streamInfo.flag} {" " + streamInfo.countryName}
+            </Text>
+
             <Text
               style={{
                 color: "#fff",
                 padding: 10,
               }}
             >
-              Countries:
+              Languages:
             </Text>
-            {streamInfo.countries.map((country) => (
+            {streamInfo.languages?.map((language) => (
               <Text
-                key={country.name}
+                key={language}
                 style={{
                   color: "#fff",
                   padding: 10,
@@ -217,7 +215,7 @@ const StreamSidebar = () => {
                   marginLeft: 10,
                 }}
               >
-                {country.name}
+                {language.toUpperCase()}
               </Text>
             ))}
           </ScrollView>

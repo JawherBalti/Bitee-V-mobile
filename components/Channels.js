@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
@@ -9,9 +9,26 @@ function Channels(props) {
   const navigation = useNavigation();
 
   const selectChannel = () => {
+    props.streamInfo["countryName"] = props.countries.filter(
+      (country) => country.code === props.streamInfo.country
+    )[0].name;
+
+    props.streamInfo["flag"] = props.countries.filter(
+      (country) => country.code === props.streamInfo.country
+    )[0].flag;
+
+    props.streamInfo["url"] = props.streamUrl.filter(
+      (stream) => stream.channel === props.streamInfo.id
+    )[0]
+      ? props.streamUrl.filter(
+          (stream) => stream.channel === props.streamInfo.id
+        )[0].url
+      : "";
+
     dispatch(getStreamInfo(props.streamInfo));
     navigation.navigate("Stream");
   };
+
   return (
     <TouchableOpacity style={styles.channels} onPress={() => selectChannel()}>
       <View style={styles.channel}>
