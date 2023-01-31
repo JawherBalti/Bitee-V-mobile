@@ -12,7 +12,7 @@ This project was bootstrapped with [Create Expo App]
 
 ## Android version download link
 
-### https://drive.google.com/file/d/17JY7C2hgHL80tla6_KBo_58s_0jGLUTi/view?usp=share_link
+### https://drive.google.com/file/d/1Q1ZVdMcyQlCmRPsqaH-J7_32TxfULUin/view?usp=share_link
 
 ## Web version repo
 
