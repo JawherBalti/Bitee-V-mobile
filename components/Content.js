@@ -11,6 +11,7 @@ import Sidebar from "./Sidebar";
 import Channels from "./Channels";
 import Pagination from "./Pagination";
 import { getSearchedChannel } from "../features/channelSlice";
+var _ = require("lodash");
 
 function Content() {
   const [loading, setLoading] = useState(false);
@@ -84,7 +85,7 @@ function Content() {
       .catch((err) => console.log(err));
 
     axios
-      .get("https://iptv-org.github.io/api/countries.json      ")
+      .get("https://iptv-org.github.io/api/countries.json")
       .then((res) => setCountries(res.data))
       .catch((err) => console.log(err));
 
@@ -92,40 +93,52 @@ function Content() {
       .get("https://iptv-org.github.io/api/channels.json")
       .then((res) => {
         setLoading(false);
+
         setStreams(
-          res.data.filter((stream) =>
-            stream.categories.some((cat) => cat !== "xxx")
-          )
+          res.data
+            .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
+            .filter((ch) => ch.country !== "IL")
+            .filter((ch) => ch.closed === null)
         );
         if (category !== "") dispatch(getSearchedChannel(""));
         if (category === "Favorites") {
           setFilteredChannels(favorites);
         } else {
           setFilteredChannels(
-            res.data.filter((stream) =>
-              stream.categories.some((cat) => cat === category.toLowerCase())
-            )
+            res.data
+              .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
+              .filter((ch) => ch.country !== "IL")
+              .filter((ch) => ch.closed === null)
+              .filter((stream) =>
+                stream.categories.some((cat) => cat === category.toLowerCase())
+              )
           );
         }
 
         setItemsList(
-          res.data.filter((stream) =>
-            stream.categories.some((cat) => cat !== "xxx")
-          ).length
+          res.data
+            .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
+            .filter((ch) => ch.country !== "IL")
+            .filter((ch) => ch.closed === null).length
         );
 
         if (category === "" || category === "All") {
           setItemsList(
-            res.data.filter((stream) =>
-              stream.categories.some((cat) => cat !== "xxx")
-            ).length
+            res.data
+              .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
+              .filter((ch) => ch.country !== "IL")
+              .filter((ch) => ch.closed === null).length
           );
         } else if (category === "Favorites") setItemsList(favorites.length);
         else
           setItemsList(
-            res.data.filter((stream) =>
-              stream.categories.some((cat) => cat === category.toLowerCase())
-            ).length
+            res.data
+              .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
+              .filter((ch) => ch.country !== "IL")
+              .filter((ch) => ch.closed === null)
+              .filter((stream) =>
+                stream.categories.some((cat) => cat === category.toLowerCase())
+              ).length
           );
       })
       .catch((err) => setError(true));

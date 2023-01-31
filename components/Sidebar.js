@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "absolute",
     zIndex: 99,
-    paddingBottom: 10,
+    paddingBottom: 13,
   },
   text: {
     color: "#fff",
