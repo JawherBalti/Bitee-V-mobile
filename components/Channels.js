@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
@@ -7,6 +7,8 @@ import { getStreamInfo } from "../features/channelSlice";
 function Channels(props) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  const [streamExists, setStreamExists] = useState(false);
 
   const selectChannel = () => {
     props.streamInfo["countryName"] = props.countries.filter(
@@ -18,7 +20,8 @@ function Channels(props) {
     )[0].flag;
 
     props.streamInfo["url"] = props.streamUrl.filter(
-      (stream) => stream.channel === props.streamInfo.id
+      (stream) =>
+        stream.channel === props.streamInfo.id && stream.status !== "error"
     )[0]
       ? props.streamUrl.filter(
           (stream) => stream.channel === props.streamInfo.id

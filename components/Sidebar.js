@@ -59,6 +59,7 @@ function Sidebar() {
   const selectedCategory = (index, category) => {
     setSelectedIndex(index);
     dispatch(getSearchedChannel(""));
+
     dispatch(getCategory(category));
   };
 

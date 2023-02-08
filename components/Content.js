@@ -11,7 +11,7 @@ import Sidebar from "./Sidebar";
 import Channels from "./Channels";
 import Pagination from "./Pagination";
 import { getSearchedChannel } from "../features/channelSlice";
-var _ = require("lodash");
+import data from "../channels";
 
 function Content() {
   const [loading, setLoading] = useState(false);
@@ -81,21 +81,12 @@ function Content() {
 
     axios
       .get("https://iptv-org.github.io/api/streams.json")
-      .then((res) => setStreamUrls(res.data))
-      .catch((err) => console.log(err));
-
-    axios
-      .get("https://iptv-org.github.io/api/countries.json")
-      .then((res) => setCountries(res.data))
-      .catch((err) => console.log(err));
-
-    axios
-      .get("https://iptv-org.github.io/api/channels.json")
       .then((res) => {
+        setStreamUrls(res.data.filter((st) => st.status !== "error"));
         setLoading(false);
 
         setStreams(
-          res.data
+          data.channels
             .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
             .filter((ch) => ch.country !== "IL")
             .filter((ch) => ch.closed === null)
@@ -105,7 +96,7 @@ function Content() {
           setFilteredChannels(favorites);
         } else {
           setFilteredChannels(
-            res.data
+            data.channels
               .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
               .filter((ch) => ch.country !== "IL")
               .filter((ch) => ch.closed === null)
@@ -116,7 +107,7 @@ function Content() {
         }
 
         setItemsList(
-          res.data
+          data.channels
             .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
             .filter((ch) => ch.country !== "IL")
             .filter((ch) => ch.closed === null).length
@@ -124,7 +115,7 @@ function Content() {
 
         if (category === "" || category === "All") {
           setItemsList(
-            res.data
+            data.channels
               .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
               .filter((ch) => ch.country !== "IL")
               .filter((ch) => ch.closed === null).length
@@ -132,7 +123,7 @@ function Content() {
         } else if (category === "Favorites") setItemsList(favorites.length);
         else
           setItemsList(
-            res.data
+            data.channels
               .filter((ch) => ch.categories.some((cat) => cat !== "xxx"))
               .filter((ch) => ch.country !== "IL")
               .filter((ch) => ch.closed === null)
@@ -142,6 +133,12 @@ function Content() {
           );
       })
       .catch((err) => setError(true));
+
+    axios
+      .get("https://iptv-org.github.io/api/countries.json")
+      .then((res) => setCountries(res.data))
+      .catch((err) => console.log(err));
+
     paginate(1);
     setminPageNumberLimit(0);
     setmaxPageNumberLimit(5);
