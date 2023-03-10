@@ -1,6 +1,6 @@
-# IPTV Mobile application
+# Bitee-V
 
-This project was bootstrapped with [Create Expo App]
+This project was bootstrapped with [Create Expo App]. Bitee-V is an application that offers 3000+ free TV channels to watch online with a web and mobile version.
 
 ## Install dependencies
 
